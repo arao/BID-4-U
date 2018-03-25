@@ -38,9 +38,10 @@ MongoClient.connect('mongodb://tusharu8:bitspilani@ds243285.mlab.com:43285/bidde
   })
 
 
-
-
-
+app.use(async function (req, res, next){
+  db = await db;
+  next();
+});
 
 // Express Session
 app.use(session({
@@ -182,6 +183,7 @@ app.get('/bidonitem',function(req,res)
 
 
 app.get('/', (req, res) => {
+
   var cursor = db.collection('bidadd').find().toArray(function(err,result){
     if(err)
       return console.log(err)
@@ -205,8 +207,8 @@ app.post('/upload',upload.any(),function(req,res,next){
   res.send(req.files);
 })
 
-app.post('/bidadd',upload.any(),function(req,res,next)
-{
+app.post('/bidadd',upload.any(),function(req,res,next){
+
   req.body.photo=req.files[0].filename;
   console.log(db);
   console.log(req.body);
