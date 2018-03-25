@@ -20,7 +20,7 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.set('view engine','ejs')
 app.use(express.static(__dirname + '/public'));
-app.set('port',5000)
+app.set('port',80)
 var MongoClient = require('mongodb').MongoClient;
 
 
