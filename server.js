@@ -29,17 +29,31 @@ var MongoClient = require('mongodb').MongoClient;
 var users=require('./routes/users');
 
 var db;
-MongoClient.connect('mongodb://tusharu8:bitspilani@ds243285.mlab.com:43285/biddetail',function(err,database)
-  {
-    if(err)
-      return console.log(err);
-      db=database;
-    return console.log("connected to mongo1");
-  })
+async function connectMongo(){
+  try{
+    db = MongoClient.connect('mongodb://tusharu8:bitspilani@ds243285.mlab.com:43285/biddetail');
+    console.log("connected to mongo 1");
+  }catch(err){
+    console.log(err);
+    return {name: err.name, message: err.message};
+  }
+}
+// MongoClient.connect('mongodb://tusharu8:bitspilani@ds243285.mlab.com:43285/biddetail',function(err,database)
+//   {
+//     if(err)
+//       return console.log(err);
+//       db=database;
+//     return console.log("connected to mongo1");
+//   })
 
 
 app.use(async function (req, res, next){
-  db = await db;
+  if(typeof db === 'undefined'){
+      connectMongo()
+      .catch(err){
+        res.send(err);
+      };
+  }
   next();
 });
 
