@@ -20,7 +20,7 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.set('view engine','ejs')
 app.use(express.static(__dirname + '/public'));
-app.set('port',process.env.PORT)
+app.set('port',process.env.PORT||5000);
 var MongoClient = require('mongodb').MongoClient;
 
 
@@ -29,33 +29,14 @@ var MongoClient = require('mongodb').MongoClient;
 var users=require('./routes/users');
 
 var db;
-async function connectMongo(){
-  try{
-    db = MongoClient.connect('mongodb://tusharu8:bitspilani@ds243285.mlab.com:43285/biddetail');
-    console.log("connected to mongo 1");
-  }catch(err){
-    console.log(err);
-    return {name: err.name, message: err.message};
-  }
-}
-// MongoClient.connect('mongodb://tusharu8:bitspilani@ds243285.mlab.com:43285/biddetail',function(err,database)
-//   {
-//     if(err)
-//       return console.log(err);
-//       db=database;
-//     return console.log("connected to mongo1");
-//   })
+MongoClient.connect('mongodb://tusharu8:bitspilani@ds243285.mlab.com:43285/biddetail',function(err,database)
+  {
+    if(err)
+      return console.log(err);
+      db=database;
+    return console.log("connected to mongo1");
+  })
 
-
-app.use(async function (req, res, next){
-  if(typeof db === 'undefined'){
-      connectMongo()
-      .catch(err){
-        res.send(err);
-      };
-  }
-  next();
-});
 
 // Express Session
 app.use(session({
